@@ -280,6 +280,33 @@ class DRIFTS(IR_Reader):
 
 
 
+    def help():
+        print(""""
+
+
+
+        obj.to_csv()                                      Will save the data as a .CSV-file.
+
+        obj.to_excel()                                    Will save the data as an .XLSX-file.
+
+        obj.plot()                                        Will make a simplified plot for the data.
+
+
+        obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
+
+        obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
+        
+
+        obj.R_to_KM()                                     Will change the y-axis format to Kubelka Munk from reflectance.
+
+        obj.KM_to_R()                                     Will change the y-axis format to reflectance from Kubelka Munk.
+
+        obj.logR_to_R()                                   Will change the y-axis format to reflectance form log-reflectance.
+
+        obj.R_to_logR()                                   Will change the y-axis format to log-reflectance from reflectance.
+        
+        """
+        )
 
 
 
@@ -482,7 +509,7 @@ class Transmission(IR_Reader):
         self.file_name = loop_func_2() 
 
         try:
-            df.to_csv(r'{}/{}.csv'.format(self.result_path,self.file_name))
+            df.to_csv(r'{}/{}.csv'.format(self.result_path,self.file_name),header=False)
         except:
             raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
@@ -534,7 +561,33 @@ class Transmission(IR_Reader):
 
         
 
+    def help():
+        print(""""
 
+
+
+        obj.to_csv()                                      Will save the data as a .CSV-file.
+
+        obj.to_excel()                                    Will save the data as an .XLSX-file.
+
+        obj.plot()                                        Will make a simplified plot for the data.
+
+
+        obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
+
+        obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
+        
+
+        obj.ATR_to_A()                                     Will change the y-axis format to ATR from absorption.
+
+        obj.A_to_ATR()                                     Will change the y-axis format to absorption from ATR.
+
+        obj.A_to_T()                                       Will change the y-axis format to transmission from absorption.
+
+        obj.T_to_A()                                       Will change the y-axis format to absorption from transmission.
+        
+        """
+        )
 
 
 
@@ -787,7 +840,33 @@ class ATR(IR_Reader):
             raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
+    def help():
+        print(""""
 
+
+
+        obj.to_csv()                                      Will save the data as a .CSV-file.
+
+        obj.to_excel()                                    Will save the data as an .XLSX-file.
+
+        obj.plot()                                        Will make a simplified plot for the data.
+
+
+        obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
+
+        obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
+        
+
+        obj.ATR_to_A()                                     Will change the y-axis format to ATR from absorption.
+
+        obj.A_to_ATR()                                     Will change the y-axis format to absorption from ATR.
+
+        obj.A_to_T()                                       Will change the y-axis format to transmission from absorption.
+
+        obj.T_to_A()                                       Will change the y-axis format to absorption from transmission.
+        
+        """
+        )
 
 
 
