@@ -27,7 +27,6 @@ The following python packages are needed:
 
 <ul>
     <li>python (>= 3.8.8)
-    <li>jupyterlab (>= 2.2.6)
     <li>matplotlib (>= 3.3.1)
     <li>pandas (>= 1.2.3)
     <li>numpy (>= 1.19.1)
