@@ -100,13 +100,15 @@ class DRIFTS(IR_Reader):
         super().__init__(*args, **kwargs)
 
         self.control_y_value = 'reflectance'
-        print('x-values: {}'.format(self.X_data))
-        print('Y-values: {}'.format(self.Y_data))
+        
 
         if self.IR_format != 'LRF':
             raise TypeError("Data is not in correct format. It is in LRF (DRIFTS)")
         
-
+    def values(self):
+        print('x-values: {}'.format(self.X_data))
+        print('Y-values: {}'.format(self.Y_data))
+        
 
 
 
@@ -380,7 +382,7 @@ class DRIFTS(IR_Reader):
 
 
 
-    def help():
+    def help(self):
         print(""""
 
 
@@ -423,8 +425,6 @@ class Transmission(IR_Reader):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print('x-values: {}'.format(self.X_data))
-        print('Y-values: {}'.format(self.Y_data))
 
 
         if self.IR_format != 'AB':
@@ -432,6 +432,9 @@ class Transmission(IR_Reader):
 
         self.control_y_value = 'absorbance'
 
+    def values(self):
+        print('x-values: {}'.format(self.X_data))
+        print('Y-values: {}'.format(self.Y_data))
 
 
     def T_to_A(self):
@@ -745,7 +748,7 @@ class Transmission(IR_Reader):
 
         
 
-    def help():
+    def help(self):
         print(""""
 
 
@@ -784,8 +787,6 @@ class ATR(IR_Reader):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print('x-values: {}'.format(self.X_data))
-        print('Y-values: {}'.format(self.Y_data))
         
 
         if self.IR_format != 'AB':
@@ -793,6 +794,9 @@ class ATR(IR_Reader):
 
         self.control_y_value = 'absorbance'
 
+    def values(self):
+        print('x-values: {}'.format(self.X_data))
+        print('Y-values: {}'.format(self.Y_data))
 
     def T_to_A(self):
 
@@ -1108,7 +1112,7 @@ class ATR(IR_Reader):
             raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
-    def help():
+    def help(self):
         print(""""
 
 
