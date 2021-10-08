@@ -656,32 +656,17 @@ class Transmission(IR_Reader):
 
 
 
-    def to_csv(self):
+    def to_csv(self, outname=None):
         x = self.IR_data[0]
         y = self.IR_data[1]
 
         data = {'x': x, 'y': y}
         df = pd.DataFrame(data,columns=['x','y'])      
 
-        def loop_func_1(): 
-        
-            inp = input("Enter the result directory:") 
-                
-            if inp is float:   # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            elif inp is int:  # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            else:
-                inp = r'{}'.format(inp)
-                return inp
-        
-        self.result_path = loop_func_1() 
 
         def loop_func_2(): 
         
-            inp = input("Enter the result file name:") 
+            inp = input("Enter the result file directory (.csv):") 
                 
             if inp is float:   # will raise another ValueError if s can't be made into a float
                 raise ValueError("You must enter an string, not an integer or floated point number.")
@@ -693,41 +678,31 @@ class Transmission(IR_Reader):
                 inp = r'{}'.format(inp)
                 return inp
                             
-        self.file_name = loop_func_2() 
+        if not outname:
+            self.file_name = loop_func_2()
+            try:
+                df.to_csv(self.file_name, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+        else:
+            try:
+                df.to_csv(outname, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
-        try:
-            df.to_csv(r'{}/{}.csv'.format(self.result_path,self.file_name),header=False)
-        except:
-            raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
 
-    def to_excel(self):
+    def to_excel(self, outname=None):
         x = self.IR_data[0]
         y = self.IR_data[1]
-
         data = {'x': x, 'y': y}
         df = pd.DataFrame(data,columns=['x','y'])      
 
-        def loop_func_1(): 
-        
-            inp = input("Enter the result directory:") 
-                
-            if inp is float:   # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            elif inp is int:  # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            else:
-                inp = r'{}'.format(inp)
-                return inp
-        
-        self.result_path = loop_func_1() 
 
         def loop_func_2(): 
         
-            inp = input("Enter the result file name:") 
+            inp = input("Enter the result file directory (.xlsx):") 
                 
             if inp is float:   # will raise another ValueError if s can't be made into a float
                 raise ValueError("You must enter an string, not an integer or floated point number.")
@@ -738,13 +713,14 @@ class Transmission(IR_Reader):
             else:
                 inp = r'{}'.format(inp)
                 return inp
-                            
-        self.file_name = loop_func_2() 
 
-        try:
-            df.to_excel(r'{}/{}.xlsx'.format(self.result_path,self.file_name), sheet_name='Sheet1')
-        except:
-            raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+        if not outname:
+            self.file_name = loop_func_2() 
+        else:
+            try:
+                df.to_excel(outname, sheet_name='Sheet1')
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
         
 

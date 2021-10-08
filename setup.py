@@ -7,12 +7,12 @@ setup(name='uio_irreader',
       license='MIT',
       entry_points={
         'console_scripts': [
-            'uio_irreader=bin.uio_irreader:main',
+            'uio_irreader=uio_irreader.bin.uio_irreader:main',
         ]
       },
       include_package_data=True,
       packages=find_packages(),
-      install_requires=['numpy>=1.19.1', 'pandas>=1.2.3', 'argparse=>1.4.0',
-                        'matplotlib>=3.3.1', 'brukeropusread==1.3.4'],
+      install_requires=['numpy>=1.19.1', 'pandas>=1.2.3', 'argparse>=1.4.0',
+                        'matplotlib>=3.3.1', 'brukeropusreader==1.3.4'],
       python_requires='>=3.8.8'
     )
