@@ -111,15 +111,56 @@ class DRIFTS(IR_Reader):
         
 
 
+    #Y_DATA change
+    def to_R(self):
+        if self.control_y_value == 'reflectance':
+            #NO CONVERSION NEEDED         
+            pass
+        elif self.control_y_value == 'log recletcance':
+            self.IR_data = DRIFTS.lgR_R(self.IR_data)
 
-    def R_to_logR(self):
+        elif self.control_y_value == 'Kubelka Munk':
+                 self.IR_data = DRIFTS.KM_R(self.IR_data)
 
-        if self.control_y_value != 'reflectance':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
+        self.control_y_value = 'reflectance'
 
 
 
-        y_value = self.IR_data[1]
+    def to_lgR(self):
+        if self.control_y_value == 'log recletcance':
+            #NO CONVERSION NEEDED         
+            pass
+        elif self.control_y_value == 'Kubelka Munk':
+            self.IR_data = DRIFTS.KM_R(self.IR_data)
+            self.IR_data = DRIFTS.R_lgR(self.IR_data)
+
+        elif self.control_y_value == 'recletcance':
+            self.IR_data = DRIFTS.R_lgR(self.IR_data)
+                 
+        self.control_y_value = 'log recletcance'
+        
+
+
+    def to_KM(self):
+        if self.control_y_value == 'Kubelka Munk':
+            #NO CONVERSION NEEDED         
+            pass
+        elif self.control_y_value == 'log recletcance':
+            self.IR_data = DRIFTS.lgR_R(self.IR_data)
+            self.IR_data = DRIFTS.R_KM(self.IR_data)
+
+        elif self.control_y_value == 'recletcance':
+            self.IR_data = DRIFTS.R_KM(self.IR_data)
+                 
+        self.control_y_value = 'Kubelka Munk'
+
+
+
+
+    @staticmethod
+    def R_lgR(y):
+        y_value = y[1]
+
         new_y_value = []
         i = 0
         for n in y_value:
@@ -127,103 +168,56 @@ class DRIFTS(IR_Reader):
             new_y_value.append(x)
             i += 1
         
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
+        y[1] = np.array(new_y_value)
+        return y
 
-        print("""
-        
-        ----   Data converted from reflectace to log reflectance   ----
-        
-        """)
-
-        
-
-        self.control_y_value = 'log reflectance'
-    
-
-
-    def logR_to_R(self):
-
-        if self.control_y_value != 'log recletcance':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
-
-        y_value = self.IR_data[1]
+    @staticmethod
+    def R_KM(y):
+        y_value =y[1]
         new_y_value = []
         i = 0
-        for n in y_value:
-            x = 1/(10**n)
-            new_y_value.append(x)
-            i += 1
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
 
-        print("""
-        
-        ----   Data converted from log reflectance to reflectance   ----
-        
-        """)
-
-      
-        self.control_y_value = 'reflectance'
-
-
-
-    def KM_to_R(self):
-
-        if self.control_y_value != 'Kubelka Munk':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value) 
-
-
-        y_value = self.IR_data[1]
-        new_y_value = []
-        i = 0
-        for n in y_value:
-            x = 1 + n - np.sqrt(2*n+n**2)
-            new_y_value.append(x)
-            i += 1
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from Kubelka Munk to reflectance   ----
-        
-        """)
-       
-        self.control_y_value = 'reflectance'
-
-
-
-    def R_to_KM(self):
-
-        if self.control_y_value != 'recletcance':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
-
-        y_value = self.IR_data[1]
-        new_y_value = []
-        i = 0
         for n in y_value:
             x = (1-n)**2/(2*n)
             new_y_value.append(x)
             i += 1
         
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
+        y[1] = np.array(new_y_value)
+        return y
+    
+    @staticmethod
+    def lgR_R(y):
+        y_value = y[1]
+        new_y_value = []
+        i = 0
 
-        print("""
+        for n in y_value:
+            x = 1/(10**n)
+            new_y_value.append(x)
+            i += 1
+
+        y[1] = np.array(new_y_value)
+        return y
+
+
+    @staticmethod
+    def KM_R(y):
+        y_value = y[1]
+        new_y_value = []
+        i = 0
+
+        for n in y_value:
+            x = 1 + n - np.sqrt(2*n+n**2)
+            new_y_value.append(x)
+            i += 1
         
-        ----   Data converted from reflectance to Kubelka Munk   ----
-        
-        """)
-
-
-        self.control_y_value = 'Kubelka Munk'
+        y[1] = np.array(new_y_value)   
+        return y
 
 
 
 
+    #X_DATA change
     def wave_number_to_micro_meter(self):
 
         if self.control_x_value != 0:
@@ -276,7 +270,7 @@ class DRIFTS(IR_Reader):
 
 
 
-
+    #OTHER
     def plot(self):
         try:
             import matplotlib.pyplot as plt
@@ -290,33 +284,18 @@ class DRIFTS(IR_Reader):
 
 
 
-    def to_csv(self):
+    def to_csv(self, outname=None):
         x = self.IR_data[0]
         y = self.IR_data[1]
 
         data = {'x': x, 'y': y}
         df = pd.DataFrame(data,columns=['x','y'])      
 
-        def loop_func_1(): 
-        
-            inp = input("Enter the result directory:") 
-                
-            if inp is float:   # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            elif inp is int:  # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            else:
-                inp = r'{}'.format(inp)
-                return inp
-        
-        self.result_path = loop_func_1() 
+
 
         def loop_func_2(): 
+            inp = input("Enter the result file directory (.csv):") 
         
-            inp = input("Enter the result file name:") 
-                
             if inp is float:   # will raise another ValueError if s can't be made into a float
                 raise ValueError("You must enter an string, not an integer or floated point number.")
                 
@@ -326,42 +305,33 @@ class DRIFTS(IR_Reader):
             else:
                 inp = r'{}'.format(inp)
                 return inp
-                            
-        self.file_name = loop_func_2() 
-
-        
-        try:
-            df.to_csv(r'{}/{}.csv'.format(self.result_path,self.file_name))
-        except:
-            raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
-    def to_excel(self):
+
+        if not outname:
+            self.file_name = loop_func_2()
+            try:
+                df.to_csv(self.file_name, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+        else:
+            try:
+                df.to_csv(outname, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+
+
+
+
+    def to_excel(self, outname=None):
         x = self.IR_data[0]
         y = self.IR_data[1]
-
         data = {'x': x, 'y': y}
         df = pd.DataFrame(data,columns=['x','y'])      
 
-        def loop_func_1(): 
-        
-            inp = input("Enter the result directory:") 
-                
-            if inp is float:   # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            elif inp is int:  # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            else:
-                inp = r'{}'.format(inp)
-                return inp
-        
-        self.result_path = loop_func_1() 
 
         def loop_func_2(): 
-        
-            inp = input("Enter the result file name:") 
+            inp = input("Enter the result file directory (.xlsx):") 
                 
             if inp is float:   # will raise another ValueError if s can't be made into a float
                 raise ValueError("You must enter an string, not an integer or floated point number.")
@@ -372,14 +342,16 @@ class DRIFTS(IR_Reader):
             else:
                 inp = r'{}'.format(inp)
                 return inp
-                            
-        self.file_name = loop_func_2() 
 
-        try:
-            df.to_excel(r'{}/{}.xlsx'.format(self.result_path,self.file_name), sheet_name='Sheet1')
-        except:
-            raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
+
+        if not outname:
+            self.file_name = loop_func_2() 
+        else:
+            try:
+                df.to_excel(outname, sheet_name='Sheet1')
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
     def help(self):
@@ -399,13 +371,11 @@ class DRIFTS(IR_Reader):
         obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
         
 
-        obj.R_to_KM()                                     Will change the y-axis format to Kubelka Munk from reflectance.
+        obj.to_KM()                                       Will change the y-axis format to Kubelka Munk.
 
-        obj.KM_to_R()                                     Will change the y-axis format to reflectance from Kubelka Munk.
+        obj.to_R()                                        Will change the y-axis format to reflectance.
 
-        obj.logR_to_R()                                   Will change the y-axis format to reflectance form log-reflectance.
-
-        obj.R_to_logR()                                   Will change the y-axis format to log-reflectance from reflectance.
+        obj.to_logR()                                     Will change the y-axis format to log-reflectance.
         
         """
         )
@@ -437,13 +407,40 @@ class Transmission(IR_Reader):
         print('Y-values: {}'.format(self.Y_data))
 
 
-    def T_to_A(self):
 
-        if self.control_y_value != 'transmission':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
+    #Y_DATA change
+    def to_A(self):
+        if self.control_y_value == 'absorbance':
+            #NO CHANGE NEEDED
+            pass
 
-        ## Beer Lambert law
-        y_value = self.IR_data[1]
+        elif self.control_y_value == 'transmission':
+            self.IR_data = Transmission.T_A(self.IR_data)
+
+
+        self.control_y_value = 'absorbance'
+
+
+    def to_T(self):
+        if self.control_y_value == 'transmission':
+            #NO CHANGE NEEDED
+            pass
+
+        elif self.control_y_value == 'absorbance':
+            self.IR_data = Transmission.A_T(self.IR_data)
+
+
+        self.control_y_value = 'transmission'
+        
+
+
+ 
+
+
+
+    @staticmethod
+    def T_A(y):
+        y_value = y[1]
         new_y_value = []
         i = 0
         for n in y_value:
@@ -451,28 +448,14 @@ class Transmission(IR_Reader):
             new_y_value.append(x)
             i += 1
         
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from transmission to absorbance   ----
-        
-        """)
-
-
-        self.control_y_value = 'absorbance'
+        y[1] = np.array(new_y_value) 
+        return y
 
 
 
-    def A_to_T(self):
-
-        if self.control_y_value != 'absorbance':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
-
-        ## Beer Lambert law
-
-        y_value = self.IR_data[1]
+    @staticmethod
+    def A_T(y):
+        y_value = y[1]
         new_y_value = []
         i = 0
         for n in y_value:
@@ -480,115 +463,16 @@ class Transmission(IR_Reader):
             new_y_value.append(x)
             i += 1
         
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
+        y[1] = np.array(new_y_value)
+        return y
 
-        print("""
-        
-        ----   Data converted from absorbance to transmission   ----
-        
-        """)
-
-        self.control_y_value = 'transmission'
-    
-
-
-    def A_to_ATR(self):
-
-
-        if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
-        
-
-        def func(self,check):
-            while check == True:
-                try:
-                    wave_number = input("Enter the wavenumber (to abort write 'END'):")
-                    self.wave_number = float(wave_number)      # this will raise a ValueError if s can't be made into an float
-                    break 
-                except ValueError:
-                    if self.wave_number == 'END':
-                        break
-                    try:
-                        int(self.wave_number)    # will raise another ValueError if s can't be made into a float
-                        print("You must enter an floating point number, rather than a integer.")
-                        func(True)
-                    except ValueError:
-                        print("You must enter a number.")
-                        func(True)
-                
-
-        func(True)
-        
-        y_value = self.IR_data[1]
-        new_y_value = []
-        i = 0
-        for n in y_value:
-            x = n * (self.wave_number/1000)
-            new_y_value.append(x)
-            i += 1
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from absorbance to ATR   ----
-        
-        """)
+ 
 
 
 
-        self.control_y_value = 'ATR'
-        
 
 
-    def ATR_to_A(self):
-
-        if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
-        
-
-        def wave_number(check):
-            while check == True:
-                try:
-                    x = input("Enter the wave number:")
-                    x = float(x)      # this will raise a ValueError if s can't be made into an float
-                    check = False
-
-                except ValueError:
-                    try:
-                        int(x)    # will raise another ValueError if s can't be made into a float
-                        print("You must enter an floating point number, rather than a integer.")
-                        wave_number(True)
-                    except ValueError:
-                        print("You must enter a number.")
-                        wave_number(True)
-            
-
-
-        y_value = self.IR_data[1]
-        new_y_value = []
-        i = 0
-        for n in y_value:
-            x = n*(1000/self.wave_number)
-            new_y_value.append(x)
-            i += 1
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from ATR to absorbance   ----
-        
-        """)
-        
-
-        self.control_y_value = 'absorbance'
-
-
+    #X_DATA change
     def wave_number_to_micro_meter(self):
 
         if self.control_x_value != 0:
@@ -642,7 +526,7 @@ class Transmission(IR_Reader):
 
 
 
-
+    #OTHER
     def plot(self):
         try:
             import matplotlib.pyplot as plt
@@ -741,13 +625,12 @@ class Transmission(IR_Reader):
         obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
         
 
-        obj.ATR_to_A()                                     Will change the y-axis format to ATR from absorption.
 
-        obj.A_to_ATR()                                     Will change the y-axis format to absorption from ATR.
+        obj.to_ATR()                                      Will change the y-axis format to absorption.
 
-        obj.A_to_T()                                       Will change the y-axis format to transmission from absorption.
+        obj.to_T()                                        Will change the y-axis format to transmission.
 
-        obj.T_to_A()                                       Will change the y-axis format to absorption from transmission.
+        obj.to_A()                                        Will change the y-axis format to absorption.
         
         """
         )
@@ -774,13 +657,39 @@ class ATR(IR_Reader):
         print('x-values: {}'.format(self.X_data))
         print('Y-values: {}'.format(self.Y_data))
 
-    def T_to_A(self):
 
-        if self.control_y_value != 'transmission':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
 
-        ## Beer Lambert law
-        y_value = self.IR_data[1]
+
+    #Y_DATA change
+    def to_A(self):
+        if self.control_y_value == 'absorbance':
+            #NO CHANGE NEEDED
+            pass
+
+        elif self.control_y_value == 'transmission':
+            self.IR_data = ATR.T_A(self.IR_data)
+
+        self.control_y_value = 'absorbance'
+
+
+    def to_T(self):
+        if self.control_y_value == 'transmission':
+            #NO CHANGE NEEDED
+            pass
+
+        elif self.control_y_value == 'absorbance':
+            self.IR_data = ATR.A_T(self.IR_data)
+
+        self.control_y_value = 'transmission'
+        
+
+
+
+
+
+    @staticmethod
+    def T_A(y):
+        y_value = y[1]
         new_y_value = []
         i = 0
         for n in y_value:
@@ -788,28 +697,14 @@ class ATR(IR_Reader):
             new_y_value.append(x)
             i += 1
         
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from transmission to absorbance   ----
-        
-        """)
-
-
-        self.control_y_value = 'absorbance'
+        y[1] = np.array(new_y_value) 
+        return y
 
 
 
-    def A_to_T(self):
-
-        if self.control_y_value != 'absorbance':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
-
-        ## Beer Lambert law
-
-        y_value = self.IR_data[1]
+    @staticmethod
+    def A_T(y):
+        y_value = y[1]
         new_y_value = []
         i = 0
         for n in y_value:
@@ -817,117 +712,13 @@ class ATR(IR_Reader):
             new_y_value.append(x)
             i += 1
         
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from absorbance to transmission   ----
-        
-        """)
-
-        self.control_y_value = 'transmission'
-    
+        y[1] = np.array(new_y_value)
+        return y
 
 
-    def A_to_ATR(self):
+ 
 
-
-        if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
-        
-
-        def func(self,check):
-            while check == True:
-                try:
-                    wave_number = input("Enter the wavenumber (to abort write 'END'):")
-                    self.wave_number = float(wave_number)      # this will raise a ValueError if s can't be made into an float
-                    break 
-                except ValueError:
-                    if self.wave_number == 'END':
-                        break
-                    try:
-                        int(self.wave_number)    # will raise another ValueError if s can't be made into a float
-                        print("You must enter an floating point number, rather than a integer.")
-                        func(True)
-                    except ValueError:
-                        print("You must enter a number.")
-                        func(True)
-                
-
-        func(True)
-        
-        y_value = self.IR_data[1]
-        new_y_value = []
-        i = 0
-        for n in y_value:
-            x = n * (self.wave_number/1000)
-            new_y_value.append(x)
-            i += 1
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from absorbance to ATR   ----
-        
-        """)
-
-
-
-        self.control_y_value = 'ATR'
-        
-
-
-    def ATR_to_A(self):
-
-        if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
-        
-
-        def wave_number(check):
-            while check == True:
-                try:
-                    x = input("Enter the wave number:")
-                    x = float(x)      # this will raise a ValueError if s can't be made into an float
-                    check = False
-
-                except ValueError:
-                    try:
-                        int(x)    # will raise another ValueError if s can't be made into a float
-                        print("You must enter an floating point number, rather than a integer.")
-                        wave_number(True)
-                    except ValueError:
-                        print("You must enter a number.")
-                        wave_number(True)
-            
-
-
-        y_value = self.IR_data[1]
-        new_y_value = []
-        i = 0
-        for n in y_value:
-            x = n*(1000/self.wave_number)
-            new_y_value.append(x)
-            i += 1
-        
-        self.IR_data[1] = np.array(new_y_value)
-        print(self.IR_data[1])
-
-        print("""
-        
-        ----   Data converted from ATR to absorbance   ----
-        
-        """)
-        
-
-        self.control_y_value = 'absorbance'
-
-
-
-
+    #X_DATA change
     def wave_number_to_micro_meter(self):
 
         if self.control_x_value != 0:
@@ -982,7 +773,7 @@ class ATR(IR_Reader):
 
 
 
-
+    #OTHER
     def plot(self):
         try:
             import matplotlib.pyplot as plt
@@ -997,32 +788,17 @@ class ATR(IR_Reader):
 
     
 
-    def to_csv(self):
+    def to_csv(self, outname=None):
         x = self.IR_data[0]
         y = self.IR_data[1]
 
         data = {'x': x, 'y': y}
         df = pd.DataFrame(data,columns=['x','y'])      
 
-        def loop_func_1(): 
-        
-            inp = input("Enter the result directory:") 
-                
-            if inp is float:   # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            elif inp is int:  # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            else:
-                inp = r'{}'.format(inp)
-                return inp
-        
-        self.result_path = loop_func_1() 
 
         def loop_func_2(): 
         
-            inp = input("Enter the result file name:") 
+            inp = input("Enter the result file directory (.csv):") 
                 
             if inp is float:   # will raise another ValueError if s can't be made into a float
                 raise ValueError("You must enter an string, not an integer or floated point number.")
@@ -1034,41 +810,31 @@ class ATR(IR_Reader):
                 inp = r'{}'.format(inp)
                 return inp
                             
-        self.file_name = loop_func_2() 
+        if not outname:
+            self.file_name = loop_func_2()
+            try:
+                df.to_csv(self.file_name, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+        else:
+            try:
+                df.to_csv(outname, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
-        try:
-            df.to_csv(r'{}/{}.csv'.format(self.result_path,self.file_name))
-        except:
-            raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
 
-    def to_excel(self):
+    def to_excel(self, outname=None):
         x = self.IR_data[0]
         y = self.IR_data[1]
-
         data = {'x': x, 'y': y}
         df = pd.DataFrame(data,columns=['x','y'])      
 
-        def loop_func_1(): 
-        
-            inp = input("Enter the result directory:") 
-                
-            if inp is float:   # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            elif inp is int:  # will raise another ValueError if s can't be made into a float
-                raise ValueError("You must enter an string, not an integer or floated point number.")
-                
-            else:
-                inp = r'{}'.format(inp)
-                return inp
-        
-        self.result_path = loop_func_1() 
 
         def loop_func_2(): 
         
-            inp = input("Enter the result file name:") 
+            inp = input("Enter the result file directory (.xlsx):") 
                 
             if inp is float:   # will raise another ValueError if s can't be made into a float
                 raise ValueError("You must enter an string, not an integer or floated point number.")
@@ -1079,13 +845,14 @@ class ATR(IR_Reader):
             else:
                 inp = r'{}'.format(inp)
                 return inp
-                            
-        self.file_name = loop_func_2() 
 
-        try:
-            df.to_excel(r'{}/{}.xlsx'.format(self.result_path,self.file_name), sheet_name='Sheet1')
-        except:
-            raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+        if not outname:
+            self.file_name = loop_func_2() 
+        else:
+            try:
+                df.to_excel(outname, sheet_name='Sheet1')
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
     def help(self):
@@ -1103,15 +870,13 @@ class ATR(IR_Reader):
         obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
 
         obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
-        
 
-        obj.ATR_to_A()                                     Will change the y-axis format to ATR from absorption.
 
-        obj.A_to_ATR()                                     Will change the y-axis format to absorption from ATR.
+        obj.to_ATR()                                      Will change the y-axis format to absorption.
+ 
+        obj.to_T()                                        Will change the y-axis format to transmission
 
-        obj.A_to_T()                                       Will change the y-axis format to transmission from absorption.
-
-        obj.T_to_A()                                       Will change the y-axis format to absorption from transmission.
+        obj.to_A()                                        Will change the y-axis format to absorption.
         
         """
         )
