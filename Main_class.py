@@ -1,6 +1,6 @@
 
 try:
-    from brukeropusreader import read_file
+    import brukeropusreader as opus
 except ImportError:
     print(f"Install brukeropusreader to read OPUS raw files")
 
@@ -14,22 +14,25 @@ class IR_Reader():
 
     def __init__(self,*args,**kwargs):
 
-        self.directory = kwargs.get('directory', False)
-
+        # self.directory = str(input("Enter the wavenumber (to abort write 'END'):")=
+        self.directory = kwargs.get('directory',r'place holder')
+        
+        # self.opus_data = opus.read_file(self.directory)
+        
 
 
         try:
-            self.opus_data = read_file(self.directory)
+            self.opus_data = opus.read_file(self.directory)
 
         except: 
             raise ImportError("A directory was not given")
 
-
+        
         ## meta data
         self.IR_Date = self.opus_data["ScRf Data Parameter"]["DAT"]
         self.IR_Detector = self.opus_data["Optik"]["DTC"]
         self.IR_intrument = self.opus_data["Instrument"]["INS"]
-        self.IR_format = self.opus_data["Acquisition"["PLF"]]
+        self.IR_format = self.opus_data["Acquisition"]["PLF"]
         self.IR_expr_name = self.opus_data["Sample"]["SNM"]
         self.IR_expr_program = self.opus_data["Sample"]["SFM"]
         self.IR_aperture = self.opus_data["Optik"]["APT"]
@@ -37,10 +40,12 @@ class IR_Reader():
 
 
         ## y-values
-        self.AB_data = self.opus_data.get_range('AB')
-
-        self.IR_data = (self.opus_data.get_rage('0'), self.opus_data['AB'][0:len[self.AB_data]])
-
+        self.X_data = self.opus_data.get_range('AB')
+        self.Y_data = self.opus_data['AB'][0:len(self.X_data)]
+        self.IR_data = []
+        self.IR_data.append(self.X_data) 
+        self.IR_data.append(self.Y_data)
+        
         ## used to keep track of the data format of the x-values
         self.control_x_value = 0
 
@@ -48,10 +53,22 @@ class IR_Reader():
         return "IR_Reader('{}')'".format(self.directory)
 
     def __str__(self):
-        return 'Directory: {} - Date: {} - Experiment name: {} - Experiment progarm: {} - No. of scans: {} - Data format: {} - Detector: {} - Arpeture: {} - Intstrument: {}'.format(self.directory,self.IR_Date,self.IR_expr_name,self.IR_expr_program,self.IR_number_of_scans,self.IR_format,self.IR_Detector,self.IR_format,self.IR_intrument)
+        return '''  Directory:  {}  
 
+                    Date:                   {} 
+                    Experiment name:        {}  
+                    Experiment progarm:     {}  
+                    No. of scans:           {} 
+                    Data format:            {} 
+                    Detector:               {} 
+                    Arpeture:               {}  
+                    Intstrument:            {}'''.format(self.directory,self.IR_Date,self.IR_expr_name,self.IR_expr_program,self.IR_number_of_scans,self.IR_format,self.IR_Detector,self.IR_aperture,self.IR_intrument)
+
+
+
+        
     def __len__(self):
-        return '{}'.format(len(self.opus_data['AB'][0:len[self.AB_data]]))
+        return len(self.Y_data)
 
 
     def help():
@@ -80,27 +97,44 @@ class IR_Reader():
 class DRIFTS(IR_Reader):
 
     def __init__(self, *args, **kwargs):
-        super(self).__init__(self,*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
+        self.control_y_value = 'reflectance'
+        print('x-values: {}'.format(self.X_data))
+        print('Y-values: {}'.format(self.Y_data))
 
-    
-    if self.IR_format != 'LRF':
-        raise TypeError("Data is not in correct format")
+        if self.IR_format != 'LRF':
+            raise TypeError("Data is not in correct format. It is in LRF (DRIFTS)")
         
 
-    self.control_y_value = 'recletcance'
 
 
 
     def R_to_logR(self):
 
-        if self.control_y_value != 'recletcance':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+        if self.control_y_value != 'reflectance':
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
+
+
 
         y_value = self.IR_data[1]
-        new_y_value = np.log(1/y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from reflectace to log reflectance")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = np.log(1/n)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from reflectace to log reflectance   ----
+        
+        """)
+
+        
 
         self.control_y_value = 'log reflectance'
     
@@ -112,10 +146,23 @@ class DRIFTS(IR_Reader):
             raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
 
         y_value = self.IR_data[1]
-        new_y_value = 1/(10**y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from log reflectance to reflectance")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = 1/(10**n)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
 
+        print("""
+        
+        ----   Data converted from log reflectance to reflectance   ----
+        
+        """)
+
+      
         self.control_y_value = 'reflectance'
 
 
@@ -125,11 +172,24 @@ class DRIFTS(IR_Reader):
         if self.control_y_value != 'Kubelka Munk':
             raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value) 
 
-        y_value = self.IR_data[1]
-        new_y_value = 1 + y_value - np.sqrt(2*y_value+y_value**2)
-        self.IR_data[1] = new_y_value
-        print("Data converted from Kubelka Munk to reflectance")
 
+        y_value = self.IR_data[1]
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = 1 + n - np.sqrt(2*n+n**2)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from Kubelka Munk to reflectance   ----
+        
+        """)
+       
         self.control_y_value = 'reflectance'
 
 
@@ -140,9 +200,22 @@ class DRIFTS(IR_Reader):
             raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
 
         y_value = self.IR_data[1]
-        new_y_value = (1-y_value)**2/(2*y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from reflectance to Kubelka Munk")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = (1-n)**2/(2*n)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from reflectance to Kubelka Munk   ----
+        
+        """)
+
 
         self.control_y_value = 'Kubelka Munk'
 
@@ -155,24 +228,51 @@ class DRIFTS(IR_Reader):
             raise TypeError("The x-values are allready in micrometers. try 'IR_reader.micro_meter_to_wave_number()'")
 
         x_value = self.IR_data[0]
-        new_x_value = (1/x_value*10**7)/1000
-        self.IR_data[0] = new_x_value
-        print("x-axis converted to micro meter")
+        new_x_value = []
+        i = 0
+        for n in x_value:
+            x = (1/n*10**7)/1000
+            new_x_value.append(x)
+            i += 1
+        
+        self.IR_data[0] = np.array(new_x_value)
+        print(self.IR_data[0])
+
+        print("""
+        
+        ----   x-axis converted to micro meter   ----
+        
+        """)
 
         self.control_x_value = 1   
     
+
 
     def micro_meter_to_wave_number(self):
 
         if self.control_x_value != 1:
             raise TypeError("The x-values are allready in micrometers. try 'IR_reader.micro_meter_to_wave_number()'")
 
+
         x_value = self.IR_data[0]
-        new_x_value = (1000/x_value)/(10**7)
-        self.IR_data[0] = new_x_value
-        print("x-axis converted to wave number")
+        new_x_value = []
+        i = 0
+        for n in x_value:
+            x = (1000/n)/(10**7)
+            new_x_value.append(x)
+            i += 1
+        
+        self.IR_data[0] = np.array(new_x_value)
+        print(self.IR_data[0])
+
+        print("""
+        
+        ----   x-axis converted to wave number   ----
+        """)
 
         self.control_x_value = 0
+
+
 
 
     def plot(self):
@@ -322,27 +422,41 @@ class DRIFTS(IR_Reader):
 class Transmission(IR_Reader):
 
     def __init__(self, *args, **kwargs):
-        super(self).__init__(self,*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        print('x-values: {}'.format(self.X_data))
+        print('Y-values: {}'.format(self.Y_data))
 
 
+        if self.IR_format != 'AB':
+            raise TypeError("Data is not in correct format. It is in AB (Transmission or ATR)")
 
-    if self.IR_format != 'AB':
-        raise TypeError("Data is not in correct format")
-
-    self.control_y_value = 'absorbance'
+        self.control_y_value = 'absorbance'
 
 
 
     def T_to_A(self):
 
         if self.control_y_value != 'transmission':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
 
         ## Beer Lambert law
         y_value = self.IR_data[1]
-        new_y_value = np.log10(1/y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from transmission to absorbance")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = np.log10(1/n)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from transmission to absorbance   ----
+        
+        """)
+
 
         self.control_y_value = 'absorbance'
 
@@ -351,13 +465,27 @@ class Transmission(IR_Reader):
     def A_to_T(self):
 
         if self.control_y_value != 'absorbance':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
 
         ## Beer Lambert law
+
         y_value = self.IR_data[1]
-        new_y_value = 1/(10**y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from absorbance to transmission")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = 1/(10**n)
+            new_y_value.append(x)
+            i += 1
+        
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from absorbance to transmission   ----
+        
+        """)
 
         self.control_y_value = 'transmission'
     
@@ -367,7 +495,7 @@ class Transmission(IR_Reader):
 
 
         if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
         
 
         def func(self,check):
@@ -391,9 +519,23 @@ class Transmission(IR_Reader):
         func(True)
         
         y_value = self.IR_data[1]
-        new_y_value = y_value * (self.wave_number(True)/1000)
-        self.IR_data[1] =  new_y_value
-        print("Data converted from absorbance to ATR")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = n * (self.wave_number/1000)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from absorbance to ATR   ----
+        
+        """)
+
+
 
         self.control_y_value = 'ATR'
         
@@ -402,7 +544,7 @@ class Transmission(IR_Reader):
     def ATR_to_A(self):
 
         if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
         
 
         def wave_number(check):
@@ -422,10 +564,24 @@ class Transmission(IR_Reader):
                         wave_number(True)
             
 
+
         y_value = self.IR_data[1]
-        new_y_value = y_value*(1000/wave_number(True))
-        self.IR_data[1] =  new_y_value
-        print("Data converted from ATR to absorbance")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = n*(1000/self.wave_number)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from ATR to absorbance   ----
+        
+        """)
+        
 
         self.control_y_value = 'absorbance'
 
@@ -436,9 +592,21 @@ class Transmission(IR_Reader):
             raise TypeError("The x-values are allready in micrometers. try 'IR_reader.micro_meter_to_wave_number()'")
 
         x_value = self.IR_data[0]
-        new_x_value = (1/x_value*10**7)/1000
-        self.IR_data[0] = new_x_value
-        print("x-axis converted to micro meter")
+        new_x_value = []
+        i = 0
+        for n in x_value:
+            x = (1/n*10**7)/1000
+            new_x_value.append(x)
+            i += 1
+        
+        self.IR_data[0] = np.array(new_x_value)
+        print(self.IR_data[0])
+
+        print("""
+        
+        ----   x-axis converted to micro meter   ----
+        
+        """)
 
         self.control_x_value = 1   
     
@@ -449,12 +617,28 @@ class Transmission(IR_Reader):
         if self.control_x_value != 1:
             raise TypeError("The x-values are allready in micrometers. try 'IR_reader.micro_meter_to_wave_number()'")
 
+
         x_value = self.IR_data[0]
-        new_x_value = (1000/x_value)/(10**7)
-        self.IR_data[0] = new_x_value
-        print("x-axis converted to wave number")
+        new_x_value = []
+        i = 0
+        for n in x_value:
+            x = (1000/n)/(10**7)
+            new_x_value.append(x)
+            i += 1
+        
+        self.IR_data[0] = np.array(new_x_value)
+        print(self.IR_data[0])
+
+        print("""
+        
+        ----   x-axis converted to wave number   ----
+        
+        """)
 
         self.control_x_value = 0
+
+
+
 
     def plot(self):
         try:
@@ -599,50 +783,79 @@ class Transmission(IR_Reader):
 class ATR(IR_Reader):
 
     def __init__(self, *args, **kwargs):
-        super(self).__init__(self,*args, **kwargs)
-
+        super().__init__(*args, **kwargs)
+        print('x-values: {}'.format(self.X_data))
+        print('Y-values: {}'.format(self.Y_data))
         
 
-    if self.IR_format != 'AB':
-        raise TypeError("Data is not in correct format")
+        if self.IR_format != 'AB':
+            raise TypeError("Data is not in correct format. It is in AB (Transmission or ATR)")
 
-    self.control_y_value = 'absorbance'
+        self.control_y_value = 'absorbance'
 
 
     def T_to_A(self):
 
         if self.control_y_value != 'transmission':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
 
         ## Beer Lambert law
         y_value = self.IR_data[1]
-        new_y_value = np.log10(1/y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from transmission to absorbance")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = np.log10(1/n)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from transmission to absorbance   ----
+        
+        """)
+
 
         self.control_y_value = 'absorbance'
 
-        
+
 
     def A_to_T(self):
 
         if self.control_y_value != 'absorbance':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
 
         ## Beer Lambert law
+
         y_value = self.IR_data[1]
-        new_y_value = 1/(10**y_value)
-        self.IR_data[1] = new_y_value
-        print("Data converted from absorbance to transmission")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = 1/(10**n)
+            new_y_value.append(x)
+            i += 1
+        
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from absorbance to transmission   ----
+        
+        """)
 
         self.control_y_value = 'transmission'
-
+    
 
 
     def A_to_ATR(self):
 
+
         if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
         
 
         def func(self,check):
@@ -666,46 +879,72 @@ class ATR(IR_Reader):
         func(True)
         
         y_value = self.IR_data[1]
-        new_y_value = y_value * (self.wave_number(True)/1000)
-        self.IR_data[1] =  new_y_value
-        print("Data converted from absorbance to ATR")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = n * (self.wave_number/1000)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from absorbance to ATR   ----
+        
+        """)
+
+
 
         self.control_y_value = 'ATR'
-
+        
 
 
     def ATR_to_A(self):
 
         if self.control_y_value != 'ATR':
-            raise TypeError("Data is not in correct format. Data is in {}.").format(self.control_x_value)
+            raise TypeError("Data is not in correct format. Data is in {}.".format(self.control_x_value))
         
 
-        def func(self,check):
+        def wave_number(check):
             while check == True:
                 try:
-                    wave_number = input("Enter the wavenumber (to abort write 'END'):")
-                    self.wave_number = float(wave_number)      # this will raise a ValueError if s can't be made into an float
-                    break 
+                    x = input("Enter the wave number:")
+                    x = float(x)      # this will raise a ValueError if s can't be made into an float
+                    check = False
+
                 except ValueError:
-                    if self.wave_number == 'END':
-                        break
                     try:
-                        int(self.wave_number)    # will raise another ValueError if s can't be made into a float
+                        int(x)    # will raise another ValueError if s can't be made into a float
                         print("You must enter an floating point number, rather than a integer.")
-                        func(True)
+                        wave_number(True)
                     except ValueError:
                         print("You must enter a number.")
-                        func(True)
-        
+                        wave_number(True)
+            
 
-        func(True)    
 
         y_value = self.IR_data[1]
-        new_y_value = y_value*(1000/self.wave_number)
-        self.IR_data[1] =  new_y_value
-        print("Data converted from ATR to absorbance")
+        new_y_value = []
+        i = 0
+        for n in y_value:
+            x = n*(1000/self.wave_number)
+            new_y_value.append(x)
+            i += 1
+        
+        self.IR_data[1] = np.array(new_y_value)
+        print(self.IR_data[1])
+
+        print("""
+        
+        ----   Data converted from ATR to absorbance   ----
+        
+        """)
+        
 
         self.control_y_value = 'absorbance'
+
 
 
 
@@ -715,12 +954,25 @@ class ATR(IR_Reader):
             raise TypeError("The x-values are allready in micrometers. try 'IR_reader.micro_meter_to_wave_number()'")
 
         x_value = self.IR_data[0]
-        new_x_value = (1/x_value*10**7)/1000
-        self.IR_data[0] = new_x_value
-        print("x-axis converted to micro meter")
+        new_x_value = []
+        i = 0
+        for n in x_value:
+            x = (1/n*10**7)/1000
+            new_x_value.append(x)
+            i += 1
+        
+        self.IR_data[0] = np.array(new_x_value)
+        print(self.IR_data[0])
+
+        print("""
+        
+        ----   x-axis converted to micro meter   ----
+        
+        """)
 
         self.control_x_value = 1   
     
+
 
 
     def micro_meter_to_wave_number(self):
@@ -728,12 +980,26 @@ class ATR(IR_Reader):
         if self.control_x_value != 1:
             raise TypeError("The x-values are allready in micrometers. try 'IR_reader.micro_meter_to_wave_number()'")
 
+
         x_value = self.IR_data[0]
-        new_x_value = (1000/x_value)/(10**7)
-        self.IR_data[0] = new_x_value
-        print("x-axis converted to wave number")
+        new_x_value = []
+        i = 0
+        for n in x_value:
+            x = (1000/n)/(10**7)
+            new_x_value.append(x)
+            i += 1
+        
+        self.IR_data[0] = np.array(new_x_value)
+        print(self.IR_data[0])
+
+        print("""
+
+        ----   x-axis converted to wave number   ----
+
+        """)
 
         self.control_x_value = 0
+
 
 
 
@@ -750,6 +1016,7 @@ class ATR(IR_Reader):
 
 
     
+
     def to_csv(self):
         x = self.IR_data[0]
         y = self.IR_data[1]
@@ -793,6 +1060,7 @@ class ATR(IR_Reader):
             df.to_csv(r'{}/{}.csv'.format(self.result_path,self.file_name))
         except:
             raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
+
 
 
     def to_excel(self):
