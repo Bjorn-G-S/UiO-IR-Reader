@@ -88,7 +88,7 @@ For developer issues, please start a ticket in Github. You can also write to the
 Bjørn Gading Solemsli (@bjorngso) & Nicolai Haaber Junge (@nicolhaa).
 
 ## License
-This script is under the free MIT license. 
+This script is under the MIT license scheme. 
 
 
 
