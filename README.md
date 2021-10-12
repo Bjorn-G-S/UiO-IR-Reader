@@ -47,7 +47,7 @@ object.to_KM()
 object.wave_number_to_micro_meter()
 object.plot()
 ```
-4. Save the changes as a `.csv`- or `.xlsx` files like the following:
+4. Save the changes as a `.csv` or `.xlsx` files like the following:
 ```
 object.to_csv()
 object.to_excel()
