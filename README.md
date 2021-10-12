@@ -38,10 +38,34 @@ The following python packages are needed:
 
 
 ## How-to
+To change and convert the raw OPUS-files, the following workflow is to be used.
 
-Download the  python script and open in Jupyter lab or your program of choise. Spesify what type of IR experiment have been used by choosing the right program (`obj = DRIFTS(r'file directory')` or `obj = Transmission(r'file directory)`).
+1. Install the package in Anaconda Prompt using the following command:
+```
+(env) C:\>pip install git+http://github.uio.no/SMN-Catalysis/UiO-IR-Reader.git
+```
+2. Import DRIFTS, Transmission and ATR clases like:
+```
+from uio_irreader import DRIFTS, Transmission, ATR
+```
+3. Define the type of experiment like:
+```
+object = DRIFTS(r'DIRECTORY OF THE FILE')
+```
+4. Change data types and quicly visualize like:
+```
+object.A_T()
+object.plot()
+```
+5. Save the changes as a `.csv`- or `.xlsx` files like the following:
+```
+object.to_csv()
+object.to_excel()
+```
 
-To access the metadata, use the `print(obj)`. To get an overview of the differnt function, use the following `obj.help()`.
+
+
+To access the metadata, use the `print(object)`. To get an overview of the differnt function, use the following `object.help()`.
 
 
 The program keeps track of what changes have been doe so that only viable changed is possible. To cycle though more than one file at a time, run the script though a for loop for all OPUS-files in a directory.
@@ -49,18 +73,22 @@ The program keeps track of what changes have been doe so that only viable change
 
 ### Git Bash
 The software can also be run in the terminal using `Git Bash`. To install the package, run the folowing in the bash treminal:
-
-
-`$ git clone https://github.uio.no/SMN-Catalysis/UiO-IR-Reader.git`
- 
-
-`$ cd UiO-IR-Reader/`
- 
-
-`$ pip install .`
- 
-
-`$ uio_irreader -h`
+1. Download the package like:
+```
+$ git clone https://github.uio.no/SMN-Catalysis/UiO-IR-Reader.git
+```
+2. Then:
+```
+$ cd UiO-IR-Reader/
+```
+3. Install using the following command:
+```
+$ pip install .
+```
+4. Run the following to use the program: 
+```
+$ uio_irreader -h
+```
 
 
 
