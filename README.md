@@ -46,7 +46,7 @@ To change and convert the raw OPUS-files, the following workflow is to be used.
 ```
 2. Import DRIFTS, Transmission and ATR clases like:
 ```
-from uio_irreader import DRIFTS, Transmission, ATR
+from uio_irreader.reader import DRIFTS, Transmission, ATR
 ```
 3. Define the type of experiment like:
 ```
