@@ -97,10 +97,12 @@ $ uio_irreader -h
 
 ## Contact
 
-For any questions please email **b.g.solemsli@smn.uio.no**
+For developer issues, please start a ticket in Github. You can also write to the dev team directly at  **b.g.solemsli@smn.uio.no**
+#### Authors: 
+Bjørn Gading Solemsli (@bjorngso) & Nicolai Haaber Junge (@nicolhaa).
 
 ## License
-This script is under the free MIT license. The authors of the script are Bjørn Gading Solemsli (bjorngso) and Nicolai Haaber Junge (nicolhaa).
+This script is under the free MIT license. 
 
 
 
