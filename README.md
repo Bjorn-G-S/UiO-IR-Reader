@@ -50,11 +50,12 @@ from uio_irreader.reader import DRIFTS, Transmission, ATR
 ```
 3. Define the type of experiment like:
 ```
-object = DRIFTS(r'DIRECTORY OF THE FILE')
+object = DRIFTS(directory=r'DIRECTORY OF THE FILE')
 ```
 4. Change data types and quicly visualize like:
 ```
 object.to_KM()
+object.wave_number_to_micro_meter()
 object.plot()
 ```
 5. Save the changes as a `.csv`- or `.xlsx` files like the following:
