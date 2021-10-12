@@ -10,7 +10,7 @@
 
 ## General
 
-UiO-IR-Reader is a python script to be used for 
+UiO-IR-Reader is a python package to be used for 
 changing the format of Bruker OPUS raw data files form Bruker Vertex70 or Vertex80 IR spectoscopy intruments.
 Currently UiO-IR-Reader is used at the section for catalysis at
 the University of Oslo.
@@ -39,12 +39,29 @@ The following python packages are needed:
 
 ## How-to
 
-Download the  python script and open in Jupyter lab or your program of choise. Spesify what type of IR experiment have been used by choosing the right program (`obj = DRIFTS(r'file directory')`, `obj = Transmission(r'file directory)` or `obj = ATR(r'file directory')`).
+Download the  python script and open in Jupyter lab or your program of choise. Spesify what type of IR experiment have been used by choosing the right program (`obj = DRIFTS(r'file directory')` or `obj = Transmission(r'file directory)`).
 
 To access the metadata, use the `print(obj)`. To get an overview of the differnt function, use the following `obj.help()`.
 
 
 The program keeps track of what changes have been doe so that only viable changed is possible. To cycle though more than one file at a time, run the script though a for loop for all OPUS-files in a directory.
+
+
+### Git Bash
+The software can also be run in the terminal using `Git Bash`. To install the package, run the folowing in the bash treminal:
+
+
+`$ git clone https://github.uio.no/SMN-Catalysis/UiO-IR-Reader.git`
+ 
+
+`$ cd UiO-IR-Reader/`
+ 
+
+`$ pip install .`
+ 
+
+`$ uio_irreader -h`
+
 
 
 
