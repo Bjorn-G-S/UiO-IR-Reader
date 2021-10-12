@@ -54,7 +54,7 @@ object = DRIFTS(r'DIRECTORY OF THE FILE')
 ```
 4. Change data types and quicly visualize like:
 ```
-object.A_T()
+object.R_lgR()
 object.plot()
 ```
 5. Save the changes as a `.csv`- or `.xlsx` files like the following:
