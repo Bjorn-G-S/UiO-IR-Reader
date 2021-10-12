@@ -5,7 +5,8 @@
 * [Purpose](#purpose)
 * [Instalation](#installation)
 * [How-to](#how-to)
-* [Comments](#Comments)
+* [Contact](#Contact)
+* [License] (#License)
 
 
 ## General
@@ -94,10 +95,12 @@ $ uio_irreader -h
 
 
 
-## Comments
-
+## Contact
 
 For any questions please email **b.g.solemsli@smn.uio.no**
+
+## License
+This script is under the MIT license. The authors of the script are Bjørn Gading Solemsli (bjorngso) and Nicolai Haaber Junge
 
 
 
