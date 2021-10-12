@@ -626,8 +626,6 @@ class Transmission(IR_Reader):
         
 
 
-        obj.to_ATR()                                      Will change the y-axis format to absorption.
-
         obj.to_T()                                        Will change the y-axis format to transmission.
 
         obj.to_A()                                        Will change the y-axis format to absorption.
@@ -872,7 +870,6 @@ class ATR(IR_Reader):
         obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
 
 
-        obj.to_ATR()                                      Will change the y-axis format to absorption.
  
         obj.to_T()                                        Will change the y-axis format to transmission
 
