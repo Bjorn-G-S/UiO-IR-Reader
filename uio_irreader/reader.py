@@ -375,7 +375,7 @@ class DRIFTS(IR_Reader):
 
         obj.to_R()                                        Will change the y-axis format to reflectance.
 
-        obj.to_logR()                                     Will change the y-axis format to log-reflectance.
+        obj.to_lgR()                                     Will change the y-axis format to log-reflectance.
         
         """
         )
