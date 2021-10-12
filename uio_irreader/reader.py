@@ -355,7 +355,7 @@ class DRIFTS(IR_Reader):
 
 
     def help(self):
-        print(""""
+        print("""
 
 
 
@@ -609,7 +609,7 @@ class Transmission(IR_Reader):
         
 
     def help(self):
-        print(""""
+        print("""
 
 
 
@@ -854,7 +854,7 @@ class ATR(IR_Reader):
 
 
     def help(self):
-        print(""""
+        print("""
 
 
 
