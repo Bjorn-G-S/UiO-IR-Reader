@@ -30,7 +30,7 @@ The following python packages are needed:
     <li>matplotlib (>= 3.3.1)
     <li>pandas (>= 1.2.3)
     <li>numpy (>= 1.19.1)
-    <li>brukeropusread (>= 1.3.4)
+    <li>brukeropusreader (>= 1.3.4)
   
 </ul>
 
