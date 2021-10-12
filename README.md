@@ -18,7 +18,7 @@ the University of Oslo.
 ## Purpose
 
 UiO-IR-Reader was created to improve data accecebility of meta data and has been designed
-to be easily used. 
+to be easily used. IT utalizes the bruckeropusreader package to more easily handle raw OPUS files.
 
 ## Installation
 
