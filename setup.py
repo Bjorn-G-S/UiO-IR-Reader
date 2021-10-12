@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='uio_irreader',
-      version='0.1',
+      version='0.1.1',
       description='A python packge to convert IR Opus files',
       url='https://github.uio.no/SMN-Catalysis/UiO-IR-Reader',
       license='MIT',
