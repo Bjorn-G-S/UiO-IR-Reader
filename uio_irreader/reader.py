@@ -71,16 +71,8 @@ class IR_Reader():
         return len(self.Y_data)
 
 
-    def help():
-        print(""""
-        
-        
-        
-        
-        
-        
-        """
-        )
+    def data(self):
+        return self.IR_data
 
 
     
