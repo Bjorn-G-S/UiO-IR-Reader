@@ -1,4 +1,5 @@
-```Copyridght (c) 2021 Bjørn Gading Solemsli and Nicolai Haaber Junge
+```
+Copyridght (c) 2021 Bjørn Gading Solemsli and Nicolai Haaber Junge
 
 ## This software falls under the MIT license
 
