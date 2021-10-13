@@ -94,7 +94,7 @@ class DRIFTS(IR_Reader):
         
 
         if self.IR_format != 'LRF':
-            raise TypeError("Data is not in correct format. It is in LRF (DRIFTS)")
+            raise TypeError("Data is not in correct format. It needs to be in LRF (DRIFTS)")
         
     def values(self):
         print('x-values: {}'.format(self.X_data))
@@ -399,7 +399,7 @@ class Transmission(IR_Reader):
 
 
         if self.IR_format != 'AB':
-            raise TypeError("Data is not in correct format. It is in AB (Transmission or ATR)")
+            raise TypeError("Data is not in correct format. It needs to be in AB (Transmission or ATR)")
 
         self.control_y_value = 'absorbance'
 
@@ -657,7 +657,7 @@ class ATR(IR_Reader):
         
 
         if self.IR_format != 'AB':
-            raise TypeError("Data is not in correct format. It is in AB (Transmission or ATR)")
+            raise TypeError("Data is not in correct format. It needs to be in AB (Transmission or ATR)")
 
         self.control_y_value = 'absorbance'
 
