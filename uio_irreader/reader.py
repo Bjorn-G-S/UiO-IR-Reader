@@ -71,8 +71,7 @@ class IR_Reader():
         return len(self.Y_data)
 
 
-    def data(self):
-        return self.IR_data
+    
 
 
     
@@ -346,6 +345,10 @@ class DRIFTS(IR_Reader):
                 raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
+
+    def data(self):
+        return self.IR_data
+
     def help(self):
         print("""
 
@@ -356,6 +359,8 @@ class DRIFTS(IR_Reader):
         obj.to_excel()                                    Will save the data as an .XLSX-file.
 
         obj.plot()                                        Will make a simplified plot for the data.
+
+        obj.data()                                        Will return the values (x,y, = obj.data()) 
 
 
         obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
@@ -600,6 +605,9 @@ class Transmission(IR_Reader):
 
         
 
+    def data(self):
+        return self.IR_data
+
     def help(self):
         print("""
 
@@ -610,6 +618,8 @@ class Transmission(IR_Reader):
         obj.to_excel()                                    Will save the data as an .XLSX-file.
 
         obj.plot()                                        Will make a simplified plot for the data.
+
+        obj.data()                                        Will return the values (x,y, = obj.data()) 
 
 
         obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
@@ -845,6 +855,10 @@ class ATR(IR_Reader):
                 raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
 
 
+    def data(self):
+        return self.IR_data
+        
+
     def help(self):
         print("""
 
@@ -855,6 +869,8 @@ class ATR(IR_Reader):
         obj.to_excel()                                    Will save the data as an .XLSX-file.
 
         obj.plot()                                        Will make a simplified plot for the data.
+
+        obj.data()                                        Will return the values (x,y, = obj.data()) 
 
 
         obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
