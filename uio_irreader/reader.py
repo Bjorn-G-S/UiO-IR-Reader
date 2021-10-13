@@ -337,7 +337,11 @@ class DRIFTS(IR_Reader):
 
 
         if not outname:
-            self.file_name = loop_func_2() 
+            self.file_name = loop_func_2()
+            try:
+                df.to_excel(self.file_name, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work') 
         else:
             try:
                 df.to_excel(outname, sheet_name='Sheet1')
@@ -596,7 +600,11 @@ class Transmission(IR_Reader):
                 return inp
 
         if not outname:
-            self.file_name = loop_func_2() 
+            self.file_name = loop_func_2()
+            try:
+                df.to_excel(self.file_name, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
         else:
             try:
                 df.to_excel(outname, sheet_name='Sheet1')
@@ -847,7 +855,11 @@ class ATR(IR_Reader):
                 return inp
 
         if not outname:
-            self.file_name = loop_func_2() 
+            self.file_name = loop_func_2()
+            try:
+                df.to_excel(self.file_name, header=None, index=False)
+            except:
+                raise TypeError('The file name and/or directory is nor corret (does not exist or dones work')
         else:
             try:
                 df.to_excel(outname, sheet_name='Sheet1')
@@ -857,7 +869,7 @@ class ATR(IR_Reader):
 
     def data(self):
         return self.IR_data
-        
+
 
     def help(self):
         print("""
