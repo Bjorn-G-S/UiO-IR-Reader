@@ -61,11 +61,11 @@ The program keeps track of what changes have been doe so that only viable change
 
 ## Git Bash
 The software can also be run in the terminal using `Git Bash`. To install the package, run the folowing in the bash treminal:
-1. Download the package like:
+1. Download the package using the following command:
 ```
 $ git clone https://github.uio.no/SMN-Catalysis/UiO-IR-Reader.git
 ```
-2. Then:
+2. Then move to the newly creater folder with the script:
 ```
 $ cd UiO-IR-Reader/
 ```
