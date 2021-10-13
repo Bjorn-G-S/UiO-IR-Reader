@@ -56,7 +56,7 @@ object.to_excel()
 To access the metadata, use the `print(object)`. To get an overview of the differnt function, use the following `object.help()`.
 
 
-The program keeps track of what changes have been doe so that only viable changed is possible. To cycle though more than one file at a time, run the script though a for loop for all OPUS-files in a directory.
+The program keeps track of what changes that have been done, so that only viable changes are possible. To cycle though more than one file at a time, run the script though a `for`-loop for all OPUS-files in a folder.
 
 
 ## Git Bash
@@ -77,7 +77,7 @@ $ pip install .
 ```
 $ uio_irreader -h
 ```
-
+To cycle though more than one file at a time, run the script though a loop for all OPUS-files in a folder.
 
 
 
