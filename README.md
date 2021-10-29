@@ -24,9 +24,18 @@ to be easily used. IT utalizes the bruckeropusreader package to more easily hand
 
 ## Installation
 
-Install the package with pip using the following command:
+Install the package with pip using the following commands in the command promt in your enviornment. The enviornment need to have `python>=3.9.7` and `pip`
+installed.
+
+Git bash and Anaconda Promt:
 ```
-pip install git+http://github.uio.no/SMN-Catalysis/UiO-IR-Reader.git
+$ git clone  https://github.uio.no/SMN-Catalysis/UiO-IR-Reader
+```
+```
+$ cd Methane-TPR/
+```
+```
+$ pip install .
 ```
 
 ## How-to
