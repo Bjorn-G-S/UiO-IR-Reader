@@ -32,7 +32,7 @@ Git bash and Anaconda Promt:
 $ git clone  https://github.uio.no/SMN-Catalysis/UiO-IR-Reader
 ```
 ```
-$ cd Methane-TPR/
+$ cd UiO-IR-Reader/
 ```
 ```
 $ pip install .
