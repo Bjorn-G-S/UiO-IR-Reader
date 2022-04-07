@@ -116,28 +116,28 @@ class DRIFTS(IR_Reader):
         if self.control_y_value == 'reflectance':
             #NO CONVERSION NEEDED         
             pass
-        elif self.control_y_value == 'log recletcance':
+        elif self.control_y_value == 'log reflectance':
             self.IR_data = DRIFTS.lgR_R(self.IR_data)
-
+            self.control_y_value = 'reflectance'
         elif self.control_y_value == 'Kubelka Munk':
-                 self.IR_data = DRIFTS.KM_R(self.IR_data)
-
-        self.control_y_value = 'reflectance'
+            self.IR_data = DRIFTS.KM_R(self.IR_data)
+            self.control_y_value = 'reflectance'
+        
 
 
 
     def to_lgR(self):
-        if self.control_y_value == 'log recletcance':
+        if self.control_y_value == 'log reflectance':
             #NO CONVERSION NEEDED         
             pass
         elif self.control_y_value == 'Kubelka Munk':
             self.IR_data = DRIFTS.KM_R(self.IR_data)
             self.IR_data = DRIFTS.R_lgR(self.IR_data)
-
-        elif self.control_y_value == 'recletcance':
+            self.control_y_value = 'log reflectance'
+        elif self.control_y_value == 'reflectance':
             self.IR_data = DRIFTS.R_lgR(self.IR_data)
-                 
-        self.control_y_value = 'log recletcance'
+            self.control_y_value = 'log reflectance'  
+        
         
 
 
@@ -145,14 +145,14 @@ class DRIFTS(IR_Reader):
         if self.control_y_value == 'Kubelka Munk':
             #NO CONVERSION NEEDED         
             pass
-        elif self.control_y_value == 'log recletcance':
+        elif self.control_y_value == 'log reflectance':
             self.IR_data = DRIFTS.lgR_R(self.IR_data)
             self.IR_data = DRIFTS.R_KM(self.IR_data)
-
-        elif self.control_y_value == 'recletcance':
+            self.control_y_value = 'Kubelka Munk'
+        elif self.control_y_value == 'reflectance':
             self.IR_data = DRIFTS.R_KM(self.IR_data)
-                 
-        self.control_y_value = 'Kubelka Munk'
+            self.control_y_value = 'Kubelka Munk'
+        
 
 
 
@@ -275,7 +275,7 @@ class DRIFTS(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting Spectra")
+            print("Plotting Stectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
@@ -541,7 +541,7 @@ class Transmission(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting Spectra")
+            print("Plotting Sectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
@@ -799,7 +799,7 @@ class ATR(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting Spectra")
+            print("Plotting AB")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
