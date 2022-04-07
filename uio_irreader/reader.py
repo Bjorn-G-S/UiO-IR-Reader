@@ -94,10 +94,15 @@ class DRIFTS(IR_Reader):
         
 
         if self.IR_format != 'LRF':
-            self.control_y_value = 'reflectance'
             if self.IR_format != 'RFL':
-                raise TypeError("Data is not in correct format. It needs to be in LRF or RFL (DRIFTS)")
-        
+                raise TypeError("Data is not in correct format. It needs to be in log reflectance (LRF) or reflectance (RFL) --- (DRIFTS mode)")
+
+        #Defining the formate for control value        
+        if self.IR_format == 'LRF': 
+            self.control_y_value = 'reflectance'
+        if self.IR_format == 'RFL':   
+            self.control_y_value = 'log reflectance'
+
     def values(self):
         print('x-values: {}'.format(self.X_data))
         print('Y-values: {}'.format(self.Y_data))
@@ -153,9 +158,9 @@ class DRIFTS(IR_Reader):
     @staticmethod
     def R_lgR(y):
         y_value = y[1]
-
         new_y_value = []
         i = 0
+
         for n in y_value:
             x = np.log(1/n)
             new_y_value.append(x)
@@ -268,7 +273,7 @@ class DRIFTS(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting AB")
+            print("Plotting Stectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
@@ -534,7 +539,7 @@ class Transmission(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting AB")
+            print("Plotting Sectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
@@ -656,7 +661,7 @@ class ATR(IR_Reader):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
 
         if self.IR_format != 'AB':
             raise TypeError("Data is not in correct format. It needs to be in AB (Transmission or ATR)")
@@ -669,7 +674,6 @@ class ATR(IR_Reader):
 
 
 
-
     #Y_DATA change
     def to_A(self):
         if self.control_y_value == 'absorbance':
@@ -677,7 +681,8 @@ class ATR(IR_Reader):
             pass
 
         elif self.control_y_value == 'transmission':
-            self.IR_data = ATR.T_A(self.IR_data)
+            self.IR_data = Transmission.T_A(self.IR_data)
+
 
         self.control_y_value = 'absorbance'
 
@@ -688,10 +693,12 @@ class ATR(IR_Reader):
             pass
 
         elif self.control_y_value == 'absorbance':
-            self.IR_data = ATR.A_T(self.IR_data)
+            self.IR_data = Transmission.A_T(self.IR_data)
+
 
         self.control_y_value = 'transmission'
         
+
 
 
 
@@ -724,6 +731,8 @@ class ATR(IR_Reader):
         
         y[1] = np.array(new_y_value)
         return y
+
+ 
 
 
  
@@ -890,15 +899,18 @@ class ATR(IR_Reader):
         obj.micro_meter_to_wave_number()                  Will change the x-axis format from micro meter to wave number.
 
         obj.wave_number_to_micro_meter()                  Will change the x-axis format from wave number to micro meter.
+        
 
+        obj.to_KM()                                       Will change the y-axis format to Kubelka Munk.
 
- 
-        obj.to_T()                                        Will change the y-axis format to transmission
+        obj.to_R()                                        Will change the y-axis format to reflectance.
 
-        obj.to_A()                                        Will change the y-axis format to absorption.
+        obj.to_lgR()                                     Will change the y-axis format to log-reflectance.
         
         """
         )
+
+
 
 
 
