@@ -95,7 +95,7 @@ class DRIFTS(IR_Reader):
 
         if self.IR_format != 'LRF':
             self.control_y_value = 'log reflectance'
-            if self.IR_format != 'RFl':
+            if self.IR_format != 'RFL':
                 raise TypeError("Data is not in correct format. It needs to be in LRF or RFL (DRIFTS)")
         
     def values(self):
