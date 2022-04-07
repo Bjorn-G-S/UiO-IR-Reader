@@ -99,9 +99,9 @@ class DRIFTS(IR_Reader):
 
         #Defining the formate for control value        
         if self.IR_format == 'LRF': 
-            self.control_y_value = 'reflectance'
-        if self.IR_format == 'RFL':   
             self.control_y_value = 'log reflectance'
+        if self.IR_format == 'RFL':   
+            self.control_y_value = 'reflectance'
 
     def values(self):
         print('x-values: {}'.format(self.X_data))
