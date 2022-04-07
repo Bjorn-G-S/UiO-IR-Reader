@@ -90,11 +90,13 @@ class DRIFTS(IR_Reader):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.control_y_value = 'reflectance'
+        self.control_y_value = 'log reflectance'
         
 
         if self.IR_format != 'LRF':
-            raise TypeError("Data is not in correct format. It needs to be in LRF (DRIFTS)")
+            self.control_y_value = 'log reflectance'
+            if self.IR_format != 'RFl'
+                raise TypeError("Data is not in correct format. It needs to be in LRF or RFL (DRIFTS)")
         
     def values(self):
         print('x-values: {}'.format(self.X_data))
