@@ -275,7 +275,7 @@ class DRIFTS(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting Stectra")
+            print("Plotting Spectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
@@ -541,7 +541,7 @@ class Transmission(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting Sectra")
+            print("Plotting Spectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
@@ -799,7 +799,7 @@ class ATR(IR_Reader):
         try:
             import matplotlib.pyplot as plt
 
-            print("Plotting AB")
+            print("Plotting Spectra")
             plt.plot(self.IR_data[0],self.IR_data[-1])
             plt.show()
 
