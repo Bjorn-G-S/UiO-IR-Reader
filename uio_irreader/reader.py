@@ -95,7 +95,8 @@ class DRIFTS(IR_Reader):
 
         if self.IR_format != 'LRF':
             if self.IR_format != 'RFL':
-                raise TypeError("Data is not in correct format. It needs to be in log reflectance (LRF) or reflectance (RFL) --- (DRIFTS mode)")
+                if self.IR_format != 'KM':
+                    raise TypeError("Data is not in correct format. It needs to be in log reflectance (LRF), reflectance (RFL) or Kubelka Munk (KM)--- (DRIFTS mode)")
 
         #Defining the formate for control value        
         if self.IR_format == 'LRF': 
@@ -104,7 +105,10 @@ class DRIFTS(IR_Reader):
         if self.IR_format == 'RFL':   
             self.control_y_value = 'reflectance'
             
-
+        if self.IR_format == 'KM':   
+            self.control_y_value = 'Kubelka Munk'
+            
+            
     def values(self):
         print('x-values: {}'.format(self.X_data))
         print('Y-values: {}'.format(self.Y_data))
