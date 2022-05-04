@@ -94,7 +94,7 @@ To cycle though more than one file at a time, run the script though a loop for a
 
 For developer issues, please start a ticket in Github. You can also write to the dev team directly at  **b.g.solemsli@smn.uio.no**
 #### Authors: 
-Bjørn Gading Solemsli (@bjorngso) & Nicolai Haaber Junge (@nicolhaa).
+Bjørn Gading Solemsli & Nicolai Haaber Junge.
 
 ## License
 This script is under the MIT license scheme. 
